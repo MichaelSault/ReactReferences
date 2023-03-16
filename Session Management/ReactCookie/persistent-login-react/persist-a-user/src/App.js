@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const App = () => {
@@ -6,12 +6,20 @@ const App = () => {
   const [password, setPassword] = useState("");
   const [user, setUser] = useState()
 
+  useEffect(() => {
+    const loggedInUser = localStorage.getItem("user");
+    if (loggedInUser) {
+      const foundUser = JSON.parse(loggedInUser);
+      setUser(foundUser);
+    }
+  }, []);
+
   const handleSubmit = async e => {
     e.preventDefault();
     const user = { username, password };
     // send the username and password to the server
     const response = await axios.post(
-      "http://blogservice.herokuapp.com/api/login",
+      "http://persistant-login.herokuapp.com/api/login",
       user
     );
     // set the state of the user
@@ -19,6 +27,13 @@ const App = () => {
     // store the user in localStorage
     localStorage.setItem('user', response.data)
     console.log(response.data)
+  };
+
+  const handleLogout = () => {
+    setUser({});
+    setUsername("");
+    setPassword("");
+    localStorage.clear();
   };
 
 // if there's a user show the message below
@@ -46,6 +61,8 @@ const App = () => {
         />
       </div>
       <button type="submit">Login</button>
+
+      <button onClick={handleLogout}>logout</button>
     </form>
   );
 };
