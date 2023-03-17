@@ -4,10 +4,14 @@ import jwt from 'jwt-decode';
 import {useState, useEffect} from 'react';
 
 function App() {
-  //checks to see if there is a user Auth token
-  useEffect(() => {
-    var JWTCookie = cookies.get("jwt_authorization");
-    console.log(JWTCookie);
+   //checks to see if there is a user Auth token, and logs them in
+   useEffect(() => {
+    try {
+      console.log(jwt(document.cookie));
+      setUser(jwt(document.cookie));
+    } catch (err) {
+      console.log("User not logged in")
+    }
   }, []);
 
   //Initialize cookies
@@ -33,10 +37,9 @@ function App() {
       expires: new Date(decoded.exp * 1000),
     });
 
-    cookies.set("jwt_test", "does this work or nah?", {
-      expires: new Date(decoded.exp * 1000),
-    });
   }
+
+ 
 
   return (
     <div className="App">
