@@ -49,3 +49,29 @@ const jwtB64Payload = replaceSpecialChars (b64Payload);
 console.log ("the payload is: ", jwtB64Payload);
 //OUTPUTS the payload is:     eyJpc3MiOiJkYXRhX2RvZyIsImV4cCI6ODY0MDAsIm5hbWUiOiJKYW1lcyBNaXRjaGVsbCIsImVtYWlsIjoiam1pdGNoZWxsQG1haWwuY29tIiwicmVnaXN0ZXJlZCI6dHJ1ZX0
 
+//import the crypto module
+const crypto = require('crypto');
+const createSignature = (jwtB64Header, jwtB64Payload, secret) => {
+    //creates a hash based message auth code using sha256
+    let signature = crypto.createHmac('sha256', secret);
+
+    //join the header and payload
+    signature.update(jwtB64Header + '.' + jwtB64Payload);
+
+    //convert signature to base64
+    signature = signature.digest('base64');
+
+    //clean the signature and remove any special characters
+    signature = replaceSpecialChars (signature);
+    return signature;
+}
+
+const secret = 'a_secret_to_everyone';
+const signature = createSignature(jwtB64Header, jwtB64Payload, secret);
+console.log("the signature is: ", signature);
+//OUTPUTS the signature is:    bWLt85oF80pZ6QfHF9BjgjvVolR3DD6Mv2ixS47nmHo
+
+//combine all parts into a JWT Token
+const jasonWebToken = jwtB64Header + '.' + jwtB64Payload + '.' + signature;
+console.log("the JWT is: ", jasonWebToken);
+//OUTPUTS the JWT is:    eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJkYXRhX2RvZyIsImV4cCI6ODY0MDAsIm5hbWUiOiJKYW1lcyBNaXRjaGVsbCIsImVtYWlsIjoiam1pdGNoZWxsQG1haWwuY29tIiwicmVnaXN0ZXJlZCI6dHJ1ZX0.bWLt85oF80pZ6QfHF9BjgjvVolR3DD6Mv2ixS47nmHo
