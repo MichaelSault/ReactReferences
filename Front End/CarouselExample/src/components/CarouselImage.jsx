@@ -38,6 +38,8 @@ const CarouselImage = ({ image, index, currentIndex }) => {
       key={image.id}
     >
       <img alt="" src={image.href} />
+      <h2>{image.title}</h2>
+      <p>{image.description}</p>
     </animated.div>
   );
 };
