@@ -32,12 +32,13 @@ const CarouselImage = ({ image, index, currentIndex }) => {
   });
 
   return (
+    
     <animated.div
       className={`carousel__container--img`}
       style={props}
       key={image.id}
     >
-      <img alt="" src={image.href} />
+      <a href={image.link}><img alt="" src={image.href} /></a>
       <h2>{image.title}</h2>
       <p>{image.description}</p>
     </animated.div>
